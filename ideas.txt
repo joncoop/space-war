@@ -1,0 +1,9 @@
+1. How does game end?
+
+2. Mob Types
+
+3. Items / Power-ups
+
+4. Shield or lives?
+
+5. Mob behavior (moving and shooting)
