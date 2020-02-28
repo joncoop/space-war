@@ -13,6 +13,8 @@ pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption(TITLE)
 
+icon = pygame.image.load('assets/images/playerShip1_blue.png').convert_alpha()
+pygame.display.set_icon(icon)
 
 # Load assets
 ''' Colors '''
