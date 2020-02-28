@@ -1,5 +1,4 @@
 import math
-import pygame
 import random
 from config import *
 
@@ -48,13 +47,13 @@ class Ship(pygame.sprite.Sprite):
 
     def check_items(self):
         hit_list = pygame.sprite.spritecollide(self, self.scene.items, True,
-                                                   pygame.sprite.collide_mask)
+                                               pygame.sprite.collide_mask)
         for item in hit_list:
             item.apply(self)
 
     def check_bombs(self):
         hit_list = pygame.sprite.spritecollide(self, self.scene.bombs, True,
-                                                   pygame.sprite.collide_mask)
+                                               pygame.sprite.collide_mask)
 
         for bomb in hit_list:
             self.shield -= 1
@@ -64,7 +63,7 @@ class Ship(pygame.sprite.Sprite):
 
     def check_mobs(self):
         hit_list = pygame.sprite.spritecollide(self, self.scene.mobs, True,
-                                                   pygame.sprite.collide_mask)
+                                               pygame.sprite.collide_mask)
 
         for mob in hit_list:
             mob.health = 0
@@ -87,6 +86,7 @@ class Ship(pygame.sprite.Sprite):
         self.check_bombs()
         self.check_mobs()
         self.check_status()
+
 
 class Laser(pygame.sprite.Sprite):
 
@@ -126,8 +126,9 @@ class Mob(pygame.sprite.Sprite):
         self.scene.bombs.add(bomb)
 
     def rotate(self):
-        if self.attack_location is not None:
-            center = self.rect.center
+        if self.attack_location is None:
+            angle_to_loc = 0
+        else:
             dx = (self.attack_location[0] - self.rect.centerx)
             dy = (self.attack_location[1] - self.rect.centery)
 
@@ -136,21 +137,26 @@ class Mob(pygame.sprite.Sprite):
             else:
                 angle_to_loc = round(math.degrees(math.atan(dx / dy)))
 
+        if angle_to_loc != self.angle:
+            center = self.rect.center
+
+            if abs(self.angle - angle_to_loc) > 5:
+                rotate_amount = 3
+            else:
+                rotate_amount = 1
+
             if self.angle < angle_to_loc:
-                self.angle += 1
+                self.angle += rotate_amount
             elif self.angle > angle_to_loc:
-                self.angle -= 1
+                self.angle -= rotate_amount
 
             self.image = pygame.transform.rotate(self.image_copy, self.angle)
             self.mask = pygame.mask.from_surface(self.image)
             self.rect.center = center
-        else:
-            self.image = self.image_copy
-            self.angle = 0
 
     def check_lasers(self):
         hit_list = pygame.sprite.spritecollide(self, self.scene.lasers, True,
-                                                   pygame.sprite.collide_mask)
+                                               pygame.sprite.collide_mask)
 
         for hit in hit_list:
             self.shield -= 1
@@ -162,10 +168,20 @@ class Mob(pygame.sprite.Sprite):
             self.scene.ship.score += 1
             self.kill()
 
+    def set_attack_location(self):
+        x = random.randrange(75, SCREEN_WIDTH - 75)
+        y = SCREEN_HEIGHT + 100
+        self.attack_location = [x, y]
+
     def update(self):
         self.rotate()
         self.check_lasers()
         self.check_status()
+
+        if self.attack_location is not None and self.rect.centery > self.fleet_loc[1]:
+            r = random.randrange(0, 100)
+            if r == 0:
+                self.set_attack_location()
 
 
 class Bomb(pygame.sprite.Sprite):
@@ -255,21 +271,24 @@ class Background:
         if self.rect.y > 0:
             self.rect.y = -1 * self.scroll_dist
 
+
 class Fleet(pygame.sprite.Group):
 
     def __init__(self, scene):
         super().__init__()
 
         self.scene = scene
-        self.speed = 2
-        self.bombs_per_second = 2.00
+        self.speed = 1
 
     def drop_bombs(self):
-        for mob in self.sprites():
-            r = random.randrange(0, 100 * FPS) / 100
+        if len(self.sprites()) > 0:
+            bombs_per_second = 0.5 * self.scene.level / len(self.sprites())
 
-            if r < self.bombs_per_second / len(self.sprites()):
-                mob.drop_bomb()
+            for mob in self.sprites():
+                r = random.randrange(0, 100 * FPS) / 100
+
+                if r < bombs_per_second:
+                    mob.drop_bomb()
 
     def move(self):
         for mob in self.sprites():
@@ -282,7 +301,7 @@ class Fleet(pygame.sprite.Group):
                 dx = (mob.attack_location[0] - mob.rect.centerx)
                 dy = (mob.attack_location[1] - mob.rect.centery)
 
-                if dx < 5 and dy < 5 :
+                if dx < 5 and dy < 5:
                     mob.rect.center = [mob.fleet_loc[0], mob.fleet_loc[1]]
                     mob.attack_location = None
                 else:
@@ -297,7 +316,7 @@ class Fleet(pygame.sprite.Group):
 
         hits_edge = False
         for mob in self.sprites():
-            if (mob.fleet_loc[0] < 100 or mob.fleet_loc[0] > SCREEN_WIDTH - 100):
+            if mob.fleet_loc[0] < 100 or mob.fleet_loc[0] > SCREEN_WIDTH - 100:
                 hits_edge = True
         if hits_edge:
             self.speed *= -1
@@ -314,9 +333,7 @@ class Fleet(pygame.sprite.Group):
 
                 if r < 1:
                     attacker = random.choice(self.sprites())
-                    x = random.randrange(75, SCREEN_WIDTH - 75)
-                    y = SCREEN_HEIGHT + 100
-                    attacker.attack_location = [x, y]
+                    attacker.set_attack_location()
 
     def update(self):
         super().update()

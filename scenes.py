@@ -1,9 +1,7 @@
 # Imports
-import math
-import random
-from config import *
 from sprites import *
 from tools import *
+
 
 # Scenes
 class Scene:
@@ -70,22 +68,19 @@ class PlayScene(Scene):
         self.start_level()
 
     def start_level(self):
-        mob1_locs =[[225, 100], [350, 100], [475, 100]]
-        mob2_locs =[[100, 200], [225, 200], [350, 200], [475, 200], [600, 200]]
+        mob1_locs = [[225, 100], [350, 100], [475, 100]]
+        mob2_locs = [[100, 200], [225, 200], [350, 200], [475, 200], [600, 200]]
 
         for loc in mob1_locs:
-            self.mobs.add( Mob(mob1_img, loc, 3, self) )
+            self.mobs.add(Mob(mob1_img, loc, 3, self))
 
         for loc in mob2_locs:
-            self.mobs.add( Mob(mob2_img, loc, 1, self) )
+            self.mobs.add(Mob(mob2_img, loc, 1, self))
 
         x = random.randrange(50, SCREEN_WIDTH - 50)
         y = random.randrange(-2000, 0)
         double_shot = DoubleShot(double_shot_img, [x, y])
         self.items.add(double_shot)
-
-        self.mobs.speed = 2
-        self.mobs.bombs_per_second = self.level
 
     def process_input(self, events, pressed_keys):
         for event in events:
@@ -115,10 +110,10 @@ class PlayScene(Scene):
             pygame.mixer.music.stop()
 
     def display_stats(self):
-        draw_text(screen, str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH // 2, 20], 'midtop')
-        draw_text(screen, 'Level: ' + str(self.level), font_md, WHITE, [SCREEN_WIDTH - 20, SCREEN_HEIGHT - 20], 'bottomright')
+        draw_text(screen, str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH // 2, 8], 'midtop')
+        draw_text(screen, 'Level: ' + str(self.level), font_md, WHITE, [SCREEN_WIDTH - 16, SCREEN_HEIGHT], 'bottomright')
 
-        y = SCREEN_HEIGHT - 48
+        y = SCREEN_HEIGHT - 40
         for n in range(self.ship.num_lives):
             x = 16 + 50 * n
             screen.blit(ship_icon, [x, y])
