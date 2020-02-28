@@ -115,8 +115,8 @@ class PlayScene(Scene):
             pygame.mixer.music.stop()
 
     def display_stats(self):
-        draw_text(screen, 'Level: ' + str(self.level), font_md, WHITE, [20, 20], 'topleft')
-        draw_text(screen, 'Score: ' + str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH - 20, 20], 'topright')
+        draw_text(screen, str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH // 2, 20], 'midtop')
+        draw_text(screen, 'Level: ' + str(self.level), font_md, WHITE, [SCREEN_WIDTH - 20, SCREEN_HEIGHT - 20], 'bottomright')
 
         y = SCREEN_HEIGHT - 48
         for n in range(self.ship.num_lives):

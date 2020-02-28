@@ -146,6 +146,7 @@ class Mob(pygame.sprite.Sprite):
             self.rect.center = center
         else:
             self.image = self.image_copy
+            self.angle = 0
 
     def check_lasers(self):
         hit_list = pygame.sprite.spritecollide(self, self.scene.lasers, True,
