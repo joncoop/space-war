@@ -7,7 +7,7 @@ from scenes import *
 class Game:
     def __init__(self):
         self.active_scene = TitleScene()
-        self.clock = pygame.time.Clock()
+        self.clock = pygame.time.Clock() 
 
     def is_quit_event(self, event, pressed_keys):
         x_out = event.type == pygame.QUIT
