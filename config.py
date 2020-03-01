@@ -7,6 +7,15 @@ SCREEN_HEIGHT = 600
 TITLE = "Name of Game"
 FPS = 60
 
+# Game states
+INTRO = 0
+PLAYING = 1
+PAUSED = 2
+STAGE_CLEARED = 3
+SHIP_KILLED = 4
+GAME_OVER = 5
+
+
 # Make window
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.init()

@@ -340,6 +340,6 @@ class Fleet(pygame.sprite.Group):
 
         self.move()
 
-        if self.scene.delay_timer == 0 and len(self.scene.player) > 0:
+        if self.scene.state == PLAYING:
             self.drop_bombs()
             self.pick_attacker()

@@ -59,8 +59,8 @@ class PlayScene(Scene):
         self.player.add(self.ship)
 
         self.level = 1
-        self.delay_timer = 0
-        self.game_over = False
+        self.delay_timer = 2 * FPS
+        self.state = INTRO
 
         pygame.mixer.music.load(main_theme)
         pygame.mixer.music.play(-1)
@@ -78,7 +78,7 @@ class PlayScene(Scene):
             self.mobs.add(Mob(mob2_img, loc, 1, self))
 
         x = random.randrange(50, SCREEN_WIDTH - 50)
-        y = random.randrange(-2000, 0)
+        y = random.randrange(-3000, -1000)
         double_shot = DoubleShot(double_shot_img, [x, y])
         self.items.add(double_shot)
 
@@ -86,28 +86,43 @@ class PlayScene(Scene):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == p1_controls['shoot']:
-                    if len(self.player) > 0:
+                    if self.state == PLAYING:
                         self.ship.shoot()
                 if event.key == p1_controls['restart']:
                     self.next_scene = TitleScene()
 
-        if pressed_keys[p1_controls['left']]:
-            self.ship.move_left()
-        elif pressed_keys[p1_controls['right']]:
-            self.ship.move_right()
+        if self.state == PLAYING or self.state == STAGE_CLEARED:
+            if pressed_keys[p1_controls['left']]:
+                self.ship.move_left()
+            elif pressed_keys[p1_controls['right']]:
+                self.ship.move_right()
 
     def check_status(self):
-        if self.ship.num_lives == 0:
-            self.game_over = True
-        elif self.ship.shield <= 0:
-            self.delay_timer = 2 * FPS
-            self.ship.shield = 1
-        elif len(self.mobs) == 0:
-            self.level += 1
-            self.start_level()
+        if self.delay_timer == 0:
+            if self.ship.num_lives == 0:
+                self.state = GAME_OVER
+                self.delay_timer = 20 * FPS
+            elif self.ship.shield <= 0:
+                self.state = SHIP_KILLED
+                self.delay_timer = 2 * FPS
+            elif len(self.mobs) == 0:
+                self.state = STAGE_CLEARED
+                self.delay_timer = 2 * FPS
+        else:
+            self.delay_timer -= 1
 
-        if self.game_over:
-            pygame.mixer.music.stop()
+            if self.delay_timer == 0:
+                if self.state == INTRO:
+                    self.state = PLAYING
+                elif self.state == SHIP_KILLED:
+                    self.state = PLAYING
+                    self.ship.respawn()
+                elif self.state == STAGE_CLEARED:
+                    self.state = PLAYING
+                    self.level += 1
+                    self.start_level()
+                elif self.state == GAME_OVER:
+                    self.next_scene = TitleScene()
 
     def display_stats(self):
         draw_text(screen, str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH // 2, 8], 'midtop')
@@ -118,9 +133,11 @@ class PlayScene(Scene):
             x = 16 + 50 * n
             screen.blit(ship_icon, [x, y])
 
-        if self.ship.num_lives == 0:
+        if self.state == INTRO:
+            draw_text(screen, "Get Ready!", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
+        elif self.state == GAME_OVER:
             draw_text(screen, "Game Over", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
-        elif len(self.mobs) == 0:
+        elif self.state == STAGE_CLEARED:
             draw_text(screen, "Stage cleared!", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
 
     def update(self):
@@ -131,13 +148,10 @@ class PlayScene(Scene):
         self.items.update()
         self.explosions.update()
 
-        if self.delay_timer == 0:
+        if self.state == PLAYING or self.state == STAGE_CLEARED:
             self.player.update()
-            self.check_status()
-            if self.delay_timer == 0 and self.ship.num_lives > 0 and len(self.player) == 0:
-                self.ship.respawn()
-        else:
-            self.delay_timer -= 1
+
+        self.check_status()
 
     def render(self):
         screen.fill(BLACK)
