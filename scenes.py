@@ -65,6 +65,7 @@ class PlayScene(Scene):
         self.level = 1
         self.delay_timer = 2 * FPS
         self.state = INTRO
+        self.next_extra_life = 50
 
         pygame.mixer.music.load(main_theme)
         pygame.mixer.music.play(-1)
@@ -127,6 +128,10 @@ class PlayScene(Scene):
                     self.start_level()
                 elif self.state == GAME_OVER:
                     self.next_scene = TitleScene()
+
+        if self.ship.score >= self.next_extra_life:
+            self.ship.num_lives += 1
+            self.next_extra_life = 100000000
 
     def display_stats(self):
         draw_text(screen, str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH // 2, 8], 'midtop')
