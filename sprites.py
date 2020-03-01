@@ -282,7 +282,7 @@ class Fleet(pygame.sprite.Group):
 
     def drop_bombs(self):
         if len(self.sprites()) > 0:
-            bombs_per_second = 0.5 * self.scene.level / len(self.sprites())
+            bombs_per_second = 0.3 * self.scene.level / len(self.sprites())
 
             for mob in self.sprites():
                 r = random.randrange(0, 100 * FPS) / 100

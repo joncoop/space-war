@@ -5,6 +5,7 @@ from tools import *
 
 # Scenes
 class Scene:
+
     def __init__(self):
         self.next_scene = self
 
@@ -22,6 +23,7 @@ class Scene:
 
 
 class TitleScene(Scene):
+
     def __init__(self):
         super().__init__()
 
@@ -30,8 +32,7 @@ class TitleScene(Scene):
     def process_input(self, events, pressed_keys):
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    self.next_scene = PlayScene()
+                self.next_scene = PlayScene()
 
     def update(self):
         self.background.update()
@@ -40,11 +41,13 @@ class TitleScene(Scene):
         screen.fill(BLACK)
         self.background.draw(screen)
 
-        draw_text(screen, TITLE, font_xl, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50], 'center')
-        screen.blit(ship_img, [SCREEN_WIDTH // 2 - ship_img.get_width() // 2, SCREEN_HEIGHT // 2 + 10])
+        draw_text(screen, TITLE, font_xl, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100], 'center')
+        screen.blit(ship_img, [SCREEN_WIDTH // 2 - ship_img.get_width() // 2, SCREEN_HEIGHT // 2 - 32])
+        draw_text(screen, 'Press any key to begin.', font_sm, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100], 'center')
 
 
 class PlayScene(Scene):
+
     def __init__(self):
         super().__init__()
 
@@ -129,8 +132,13 @@ class PlayScene(Scene):
         draw_text(screen, str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH // 2, 8], 'midtop')
         draw_text(screen, 'Level: ' + str(self.level), font_md, WHITE, [SCREEN_WIDTH - 16, SCREEN_HEIGHT], 'bottomright')
 
+        extra_lives = self.ship.num_lives - 1
+
+        if self.state == SHIP_KILLED:
+            extra_lives += 1
+
         y = SCREEN_HEIGHT - 40
-        for n in range(self.ship.num_lives):
+        for n in range(extra_lives):
             x = 16 + 50 * n
             screen.blit(ship_icon, [x, y])
 
@@ -167,6 +175,7 @@ class PlayScene(Scene):
 
 
 class EndScene(Scene):
+
     def __init__(self):
         super().__init__()
         pygame.mixer.music.stop()
