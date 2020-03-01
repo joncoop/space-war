@@ -34,13 +34,14 @@ class TitleScene(Scene):
                     self.next_scene = PlayScene()
 
     def update(self):
-        pass
+        self.background.update()
 
     def render(self):
         screen.fill(BLACK)
         self.background.draw(screen)
 
-        draw_text(screen, TITLE, font_xl, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
+        draw_text(screen, TITLE, font_xl, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50], 'center')
+        screen.blit(ship_img, [SCREEN_WIDTH // 2 - ship_img.get_width() // 2, SCREEN_HEIGHT // 2 + 10])
 
 
 class PlayScene(Scene):

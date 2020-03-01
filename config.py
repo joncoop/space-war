@@ -4,7 +4,7 @@ import pygame
 # Window settings
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-TITLE = "Name of Game"
+TITLE = "Space War!"
 FPS = 60
 
 # Game states
@@ -34,7 +34,7 @@ WHITE = (255, 255, 255)
 font_sm = pygame.font.Font('assets/fonts/kenvector_future.ttf', 24)
 font_md = pygame.font.Font('assets/fonts/kenvector_future.ttf', 32)
 font_lg = pygame.font.Font('assets/fonts/kenvector_future.ttf', 48)
-font_xl = pygame.font.Font('assets/fonts/kenvector_future.ttf', 64)
+font_xl = pygame.font.Font('assets/fonts/kenvector_future.ttf', 72)
 
 ''' Images '''
 background_img = pygame.image.load('assets/images/purple.png').convert_alpha()
