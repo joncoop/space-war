@@ -121,6 +121,11 @@ class Mob(pygame.sprite.Sprite):
         self.attack_location = None
         self.angle = 0
 
+        if self.shield == 1:
+            self.value = 1
+        else:
+            self.value = 5
+
     def drop_bomb(self):
         bomb = Bomb(bomb_img, [self.rect.centerx, self.rect.bottom])
         self.scene.bombs.add(bomb)
@@ -165,7 +170,7 @@ class Mob(pygame.sprite.Sprite):
         if self.shield <= 0:
             explosion = Explosion(explosion_imgs, self.rect.center)
             self.scene.explosions.add(explosion)
-            self.scene.ship.score += 1
+            self.scene.ship.score += self.value
             self.kill()
 
     def set_attack_location(self):
@@ -208,9 +213,11 @@ class DoubleShot(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.center = location
+        self.value = 2
 
     def apply(self, ship):
         ship.shoots_double = True
+        ship.score += self.value
         power_up_snd.play()
 
     def update(self):
