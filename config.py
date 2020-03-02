@@ -31,10 +31,10 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 ''' Fonts '''
-font_sm = pygame.font.Font('assets/fonts/kenvector_future.ttf', 24)
-font_md = pygame.font.Font('assets/fonts/kenvector_future.ttf', 32)
-font_lg = pygame.font.Font('assets/fonts/kenvector_future.ttf', 48)
-font_xl = pygame.font.Font('assets/fonts/kenvector_future.ttf', 72)
+font_sm = pygame.font.Font('assets/fonts/recharge bd.ttf', 24)
+font_md = pygame.font.Font('assets/fonts/recharge bd.ttf', 32)
+font_lg = pygame.font.Font('assets/fonts/recharge bd.ttf', 48)
+font_xl = pygame.font.Font('assets/fonts/recharge bd.ttf', 72)
 
 ''' Images '''
 background_img = pygame.image.load('assets/images/purple.png').convert_alpha()

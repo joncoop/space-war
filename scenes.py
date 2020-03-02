@@ -87,12 +87,17 @@ class PlayScene(Scene):
         double_shot = DoubleShot(double_shot_img, [x, y])
         self.items.add(double_shot)
 
+        self.shots_fired = 0
+        self.shots_needed = 0
+        for mob in self.mobs:
+            self.shots_needed += mob.shield
+
     def process_input(self, events, pressed_keys):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == p1_controls['shoot']:
                     if self.state == PLAYING:
-                        self.ship.shoot()
+                        self.shots_fired += self.ship.shoot()
                 if event.key == p1_controls['restart']:
                     self.next_scene = TitleScene()
 
@@ -112,7 +117,9 @@ class PlayScene(Scene):
                 self.delay_timer = 2 * FPS
             elif len(self.mobs) == 0:
                 self.state = STAGE_CLEARED
-                self.delay_timer = 2 * FPS
+                self.accuracy = round(100 * self.shots_needed / self.shots_fired)
+                self.bonus = self.accuracy
+                self.delay_timer = 3 * self.accuracy + FPS
         else:
             self.delay_timer -= 1
 
@@ -152,7 +159,17 @@ class PlayScene(Scene):
         elif self.state == GAME_OVER:
             draw_text(screen, "Game Over", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
         elif self.state == STAGE_CLEARED:
-            draw_text(screen, "Stage cleared!", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
+            draw_text(screen, "Stage cleared!", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 80], 'center')
+            text = font_sm.render("Shots fired: " + str(self.shots_fired), True, WHITE)
+            x = SCREEN_WIDTH // 2 - text.get_rect().width // 2
+            draw_text(screen, "Shots fired: " + str(self.shots_fired), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 - 30], 'midleft')
+            draw_text(screen, "Misses: " + str(self.shots_fired - self.shots_needed), font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')
+            draw_text(screen, "Accuracy: " + str(self.accuracy), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 30], 'midleft')
+            draw_text(screen, "Bonus: " + str(self.bonus), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 60], 'midleft')
+
+            if self.bonus > 0 and self.delay_timer % 3 == 0:
+                self.ship.score += 1
+                self.bonus -= 1
 
     def update(self):
         self.background.update()

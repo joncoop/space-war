@@ -40,10 +40,14 @@ class Ship(pygame.sprite.Sprite):
             laser2 = Laser(laser_img, [self.rect.right, self.rect.centery])
             self.scene.lasers.add(laser1, laser2)
             laser_snd.play()
+            return 2
         elif num_lasers < 2:
             laser = Laser(laser_img, [self.rect.centerx, self.rect.top])
             self.scene.lasers.add(laser)
             laser_snd.play()
+            return 1
+
+        return 0
 
     def check_items(self):
         hit_list = pygame.sprite.spritecollide(self, self.scene.items, True,
@@ -122,9 +126,9 @@ class Mob(pygame.sprite.Sprite):
         self.angle = 0
 
         if self.shield == 1:
-            self.value = 1
+            self.value = 10
         else:
-            self.value = 5
+            self.value = 50
 
     def drop_bomb(self):
         bomb = Bomb(bomb_img, [self.rect.centerx, self.rect.bottom])
@@ -213,7 +217,7 @@ class DoubleShot(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.center = location
-        self.value = 2
+        self.value = 20
 
     def apply(self, ship):
         ship.shoots_double = True
