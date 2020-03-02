@@ -28,6 +28,7 @@ class TitleScene(Scene):
         super().__init__()
 
         self.background = Background(background_img)
+        pygame.mixer.music.stop()
 
     def process_input(self, events, pressed_keys):
         for event in events:
@@ -65,21 +66,37 @@ class PlayScene(Scene):
         self.level = 1
         self.delay_timer = 2 * FPS
         self.state = INTRO
-        self.next_extra_life = 50
+        self.next_extra_life = 2000
 
         pygame.mixer.music.load(main_theme)
-        pygame.mixer.music.play(-1)
 
         self.start_level()
 
     def start_level(self):
-        mob1_locs = [[225, 100], [350, 100], [475, 100]]
-        mob2_locs = [[100, 200], [225, 200], [350, 200], [475, 200], [600, 200]]
+        centerx = SCREEN_WIDTH // 2
+        spacing = 125
 
-        for loc in mob1_locs:
+        row1 = [[centerx - spacing, 100],
+                [centerx, 100],
+                [centerx + spacing, 100]]
+        row2 = [[centerx - 2 * spacing, 200],
+                [centerx - spacing, 200],
+                [centerx, 200],
+                [centerx + spacing, 200],
+                [centerx + 2 * spacing, 200]]
+        row3 = [[centerx - 2 * spacing, 300],
+                [centerx - spacing, 300],
+                [centerx, 300],
+                [centerx + spacing, 300],
+                [centerx + 2 * spacing, 300]]
+
+        for loc in row1:
             self.mobs.add(Mob(mob1_img, loc, 3, self))
 
-        for loc in mob2_locs:
+        for loc in row2:
+            self.mobs.add(Mob(mob2_img, loc, 1, self))
+
+        for loc in row3:
             self.mobs.add(Mob(mob2_img, loc, 1, self))
 
         x = random.randrange(50, SCREEN_WIDTH - 50)
@@ -91,6 +108,8 @@ class PlayScene(Scene):
         self.shots_needed = 0
         for mob in self.mobs:
             self.shots_needed += mob.shield
+
+        pygame.mixer.music.play(-1)
 
     def process_input(self, events, pressed_keys):
         for event in events:
@@ -112,6 +131,7 @@ class PlayScene(Scene):
             if self.ship.num_lives == 0:
                 self.state = GAME_OVER
                 self.delay_timer = 20 * FPS
+                pygame.mixer.music.stop()
             elif self.ship.shield <= 0:
                 self.state = SHIP_KILLED
                 self.delay_timer = 2 * FPS
@@ -155,17 +175,17 @@ class PlayScene(Scene):
             screen.blit(ship_icon, [x, y])
 
         if self.state == INTRO:
-            draw_text(screen, "Get Ready!", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
+            draw_text(screen, 'Get Ready!', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
         elif self.state == GAME_OVER:
-            draw_text(screen, "Game Over", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
+            draw_text(screen, 'Game Over', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
         elif self.state == STAGE_CLEARED:
-            draw_text(screen, "Stage cleared!", font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 80], 'center')
+            draw_text(screen, 'Stage cleared!', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 80], 'center')
             text = font_sm.render("Shots fired: " + str(self.shots_fired), True, WHITE)
             x = SCREEN_WIDTH // 2 - text.get_rect().width // 2
-            draw_text(screen, "Shots fired: " + str(self.shots_fired), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 - 30], 'midleft')
-            draw_text(screen, "Misses: " + str(self.shots_fired - self.shots_needed), font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')
-            draw_text(screen, "Accuracy: " + str(self.accuracy), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 30], 'midleft')
-            draw_text(screen, "Bonus: " + str(self.bonus), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 60], 'midleft')
+            draw_text(screen, 'Shots fired: ' + str(self.shots_fired), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 - 30], 'midleft')
+            draw_text(screen, 'Misses: ' + str(self.shots_fired - self.shots_needed), font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')
+            draw_text(screen, 'Accuracy: ' + str(self.accuracy) + "%", font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 30], 'midleft')
+            draw_text(screen, 'Bonus: ' + str(self.bonus), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 60], 'midleft')
 
             if self.bonus > 0 and self.delay_timer % 3 == 0:
                 self.ship.score += 1
