@@ -66,9 +66,10 @@ class PlayScene(Scene):
         self.level = 1
         self.delay_timer = 2 * FPS
         self.state = INTRO
-        self.next_extra_life = 2000
+        self.extra_life_index = 0
 
         pygame.mixer.music.load(main_theme)
+        pygame.mixer.music.play(-1)
 
         self.start_level()
 
@@ -109,21 +110,21 @@ class PlayScene(Scene):
         for mob in self.mobs:
             self.shots_needed += mob.shield
 
-        pygame.mixer.music.play(-1)
+        pygame.mixer.music.unpause()
 
     def process_input(self, events, pressed_keys):
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == p1_controls['shoot']:
+                if event.key == CONTROLS['shoot']:
                     if self.state == PLAYING:
                         self.shots_fired += self.ship.shoot()
-                if event.key == p1_controls['restart']:
+                if event.key == CONTROLS['restart']:
                     self.next_scene = TitleScene()
 
         if self.state == PLAYING or self.state == STAGE_CLEARED:
-            if pressed_keys[p1_controls['left']]:
+            if pressed_keys[CONTROLS['left']]:
                 self.ship.move_left()
-            elif pressed_keys[p1_controls['right']]:
+            elif pressed_keys[CONTROLS['right']]:
                 self.ship.move_right()
 
     def check_status(self):
@@ -138,8 +139,10 @@ class PlayScene(Scene):
             elif len(self.mobs) == 0:
                 self.state = STAGE_CLEARED
                 self.accuracy = round(100 * self.shots_needed / self.shots_fired)
+                self.misses = self.shots_fired - self.shots_needed
                 self.bonus = self.accuracy
                 self.delay_timer = 3 * self.accuracy + FPS
+                pygame.mixer.music.pause()
         else:
             self.delay_timer -= 1
 
@@ -156,9 +159,10 @@ class PlayScene(Scene):
                 elif self.state == GAME_OVER:
                     self.next_scene = TitleScene()
 
-        if self.ship.score >= self.next_extra_life:
+        if (self.extra_life_index < len(EXTRA_SHIP_AT) and
+            self.ship.score >= EXTRA_SHIP_AT[self.extra_life_index]):
             self.ship.num_lives += 1
-            self.next_extra_life = 100000000
+            self.extra_life_index += 1
 
     def display_stats(self):
         draw_text(screen, str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH // 2, 8], 'midtop')
@@ -183,7 +187,7 @@ class PlayScene(Scene):
             text = font_sm.render("Shots fired: " + str(self.shots_fired), True, WHITE)
             x = SCREEN_WIDTH // 2 - text.get_rect().width // 2
             draw_text(screen, 'Shots fired: ' + str(self.shots_fired), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 - 30], 'midleft')
-            draw_text(screen, 'Misses: ' + str(self.shots_fired - self.shots_needed), font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')
+            draw_text(screen, 'Misses: ' + str(self.misses), font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')
             draw_text(screen, 'Accuracy: ' + str(self.accuracy) + "%", font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 30], 'midleft')
             draw_text(screen, 'Bonus: ' + str(self.bonus), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 60], 'midleft')
 

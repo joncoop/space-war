@@ -40,7 +40,6 @@ def load_image(path, width=None, height=None):
     if width is not None or height is not None:
         image = pygame.transform.scale(image, [width, height])
 
-    print(width, height)
     return image
 
 def load_sound(path, volume=1.0):

@@ -16,18 +16,18 @@ class Ship(pygame.sprite.Sprite):
         self.scene = scene
 
         self.shield = 1
-        self.num_lives = 3
+        self.num_lives = NUM_LIVES
         self.shoots_double = False
         self.score = 0
 
     def move_left(self):
-        self.rect.x -= 5
+        self.rect.x -= SHIP_SPEED
 
         if self.rect.left < 0:
             self.rect.left = 0
 
     def move_right(self):
-        self.rect.x += 5
+        self.rect.x += SHIP_SPEED
 
         if self.rect.right > SCREEN_WIDTH:
             self.rect.right = SCREEN_WIDTH
@@ -66,11 +66,12 @@ class Ship(pygame.sprite.Sprite):
                 self.shoots_double = False
 
     def check_mobs(self):
-        hit_list = pygame.sprite.spritecollide(self, self.scene.mobs, True,
+        hit_list = pygame.sprite.spritecollide(self, self.scene.mobs, False,
                                                pygame.sprite.collide_mask)
 
         for mob in hit_list:
-            mob.health = 0
+            self.scene.shots_needed -= mob.shield
+            mob.shield = 0
             self.shield = 0
 
     def respawn(self):
@@ -103,7 +104,7 @@ class Laser(pygame.sprite.Sprite):
         self.rect.center = location
 
     def update(self):
-        self.rect.y -= 8
+        self.rect.y -= LASER_SPEED
 
         if self.rect.bottom < 0:
             self.kill()
@@ -126,9 +127,9 @@ class Mob(pygame.sprite.Sprite):
         self.angle = 0
 
         if self.shield == 1:
-            self.value = 10
+            self.value = MOB1_VALUE
         else:
-            self.value = 50
+            self.value = MOB2_VALUE
 
     def drop_bomb(self):
         bomb = Bomb(bomb_img, [self.rect.centerx, self.rect.bottom])
@@ -203,7 +204,7 @@ class Bomb(pygame.sprite.Sprite):
         self.rect.center = location
 
     def update(self):
-        self.rect.y += 6
+        self.rect.y += BOMB_SPEED
 
         if self.rect.top > SCREEN_HEIGHT:
             self.kill()
@@ -217,7 +218,7 @@ class DoubleShot(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.center = location
-        self.value = 20
+        self.value = POWERUP_VALUE
 
     def apply(self, ship):
         ship.shoots_double = True
@@ -225,7 +226,7 @@ class DoubleShot(pygame.sprite.Sprite):
         power_up_snd.play()
 
     def update(self):
-        self.rect.y += 5
+        self.rect.y += POWERUP_SPEED
 
         if self.rect.top > SCREEN_HEIGHT:
             self.kill()
@@ -293,7 +294,7 @@ class Fleet(pygame.sprite.Group):
 
     def drop_bombs(self):
         if len(self.sprites()) > 0:
-            bombs_per_second = 0.3 * self.scene.level / len(self.sprites())
+            bombs_per_second = 0.25 * self.scene.level / len(self.sprites())
 
             for mob in self.sprites():
                 r = random.randrange(0, 100 * FPS) / 100
@@ -312,12 +313,12 @@ class Fleet(pygame.sprite.Group):
                 dx = (mob.attack_location[0] - mob.rect.centerx)
                 dy = (mob.attack_location[1] - mob.rect.centery)
 
-                if dx < 5 and dy < 5:
+                if dx < MOB_ATTACK_SPEED and dy < MOB_ATTACK_SPEED:
                     mob.rect.center = [mob.fleet_loc[0], mob.fleet_loc[1]]
                     mob.attack_location = None
                 else:
-                    vx = 5 * dx / math.sqrt(dx ** 2 + dy ** 2)
-                    vy = 5 * dy / math.sqrt(dx ** 2 + dy ** 2)
+                    vx = MOB_ATTACK_SPEED * dx / math.sqrt(dx ** 2 + dy ** 2)
+                    vy = MOB_ATTACK_SPEED * dy / math.sqrt(dx ** 2 + dy ** 2)
                     mob.rect.x += vx
                     mob.rect.y += vy
 

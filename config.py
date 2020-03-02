@@ -16,7 +16,6 @@ STAGE_CLEARED = 3
 SHIP_KILLED = 4
 GAME_OVER = 5
 
-
 # Make window
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.init()
@@ -67,7 +66,18 @@ power_down_snd = load_sound('assets/sounds/phaserDown3.ogg')
 
 # Game settings
 ''' Controls '''
-p1_controls = {'left': pygame.K_LEFT,
-               'right': pygame.K_RIGHT,
-               'shoot': pygame.K_SPACE,
-               'restart': pygame.K_r}
+CONTROLS = {'left': pygame.K_LEFT,
+            'right': pygame.K_RIGHT,
+            'shoot': pygame.K_SPACE,
+            'restart': pygame.K_r}
+
+NUM_LIVES = 3
+SHIP_SPEED = 5
+MOB_ATTACK_SPEED = 5
+LASER_SPEED = 8
+BOMB_SPEED = 6
+POWERUP_SPEED = 6
+MOB1_VALUE = 10
+MOB2_VALUE = 50
+POWERUP_VALUE = 20
+EXTRA_SHIP_AT = [2000, 5000]
