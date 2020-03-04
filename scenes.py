@@ -28,7 +28,9 @@ class TitleScene(Scene):
         super().__init__()
 
         self.background = Background(background_img)
-        pygame.mixer.music.stop()
+
+        pygame.mixer.music.load(start_theme)
+        pygame.mixer.music.play(-1)
 
     def process_input(self, events, pressed_keys):
         for event in events:
@@ -133,6 +135,7 @@ class PlayScene(Scene):
                 self.state = GAME_OVER
                 self.delay_timer = 20 * FPS
                 pygame.mixer.music.stop()
+                end_snd.play()
             elif self.ship.shield <= 0:
                 self.state = SHIP_KILLED
                 self.delay_timer = 2 * FPS
