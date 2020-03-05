@@ -239,7 +239,6 @@ class PlayScene(Scene):
         self.explosions.draw(screen)
         self.display_stats()
 
-
 class EndScene(Scene):
 
     def __init__(self):
