@@ -1,4 +1,6 @@
+import os
 import pygame
+import getpass
 
 
 def draw_text(surface, text, font, color, loc, anchor='topleft'):
@@ -47,3 +49,31 @@ def load_sound(path, volume=1.0):
     sound.set_volume(volume)
 
     return sound
+
+def read_high_score():
+    username = getpass.getuser()
+    folder_name = 'C:/Users/' + username + '/AppData/Local/Space War/'
+    file_name = 'scores.txt'
+    full_path = folder_name + file_name
+
+    if os.path.exists(full_path):
+        with open(full_path, 'r') as f:
+            score = int(f.read())
+    else:
+        score = 0
+
+    return int(score)
+
+def save_high_score(score):
+    print('writing...')
+    username = getpass.getuser()
+    folder_name = 'C:/Users/' + username + '/AppData/Local/Space War/'
+    file_name = 'scores.txt'
+    full_path = folder_name + file_name
+
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name)
+
+    with open(full_path, 'w') as f:
+        f.write(str(score))
+        print('done')

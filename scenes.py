@@ -32,6 +32,8 @@ class TitleScene(Scene):
         pygame.mixer.music.load(start_theme)
         pygame.mixer.music.play(-1)
 
+        self.high_score = read_high_score()
+
     def process_input(self, events, pressed_keys):
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -72,6 +74,8 @@ class PlayScene(Scene):
 
         pygame.mixer.music.load(main_theme)
         pygame.mixer.music.play(-1)
+
+        self.high_score = read_high_score()
 
         self.start_level()
 
@@ -136,6 +140,10 @@ class PlayScene(Scene):
                 self.delay_timer = 20 * FPS
                 pygame.mixer.music.stop()
                 end_snd.play()
+
+                if self.ship.score >= self.high_score:
+                    save_high_score(self.high_score)
+
             elif self.ship.shield <= 0:
                 self.state = SHIP_KILLED
                 self.delay_timer = 3 * FPS
@@ -176,9 +184,15 @@ class PlayScene(Scene):
             self.ship.num_lives += 1
             self.extra_life_index += 1
 
+        self.high_score = max(self.high_score, self.ship.score)
+
     def display_stats(self):
-        draw_text(screen, str(self.ship.score), font_md, WHITE, [SCREEN_WIDTH // 2, 8], 'midtop')
-        draw_text(screen, 'Level: ' + str(self.level), font_md, WHITE, [SCREEN_WIDTH - 16, SCREEN_HEIGHT], 'bottomright')
+        score_str = 'Score: ' + str(self.ship.score)
+        level_str = 'Level: ' + str(self.level)
+        high_score_str = 'High: ' + str(self.high_score)
+        draw_text(screen, score_str, font_sm, WHITE, [10, 10], 'topleft')
+        draw_text(screen, level_str, font_sm, WHITE, [10, 40], 'topleft')
+        draw_text(screen, high_score_str, font_sm, WHITE, [SCREEN_WIDTH -10, 10], 'topright')
 
         extra_lives = self.ship.num_lives - 1
 
