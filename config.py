@@ -33,7 +33,7 @@ pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption(TITLE)
 
-icon = load_image(application_path + 'assets/images/playerShip1_blue.png')
+icon = load_image(application_path + 'assets/images/window_icon.png')
 pygame.display.set_icon(icon)
 
 
@@ -41,6 +41,7 @@ pygame.display.set_icon(icon)
 ''' Colors '''
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+PURPLE = (94, 63, 107)
 
 ''' Fonts '''
 font_sm = pygame.font.Font(application_path + 'assets/fonts/recharge bd.ttf', 24)
@@ -76,6 +77,7 @@ laser_snd = load_sound(application_path + 'assets/sounds/sfx_laser1.ogg')
 explosion_snd = load_sound(application_path + 'assets/sounds/explosion1.ogg')
 power_up_snd = load_sound(application_path + 'assets/sounds/phaserUp3.ogg')
 power_down_snd = load_sound(application_path + 'assets/sounds/phaserDown3.ogg')
+point_snd = load_sound(application_path + 'assets/sounds/pointTally.wav')
 end_snd = load_sound(application_path + 'assets/music/Mega Man - Game Over.wav')
 
 

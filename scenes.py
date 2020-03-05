@@ -214,6 +214,8 @@ class PlayScene(Scene):
             if self.bonus > 0 and self.delay_timer % 3 == 0 and self.delay_timer < 3 * self.accuracy + 1.5 * FPS:
                 self.ship.score += 1 * self.bonus_multiplier
                 self.bonus -= 1
+                if self.delay_timer % 2 == 0:
+                    point_snd.play()
 
     def update(self):
         self.background.update()

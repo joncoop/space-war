@@ -28,5 +28,5 @@ exe = EXE(pyz,
           upx=True,
           runtime_tmpdir=None,
           console=False,
-          icon = 'assets/images/icon.ico',
+          icon = 'assets/images/app_icon.ico',
           version='version.txt')

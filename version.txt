@@ -30,7 +30,7 @@ StringFileInfo(
   StringTable(
     u'040904B0',
     [StringStruct(u'CompanyName', u'http://github.com/joncoop'),
-    StringStruct(u'FileDescription', u'Space War! game'),
+    StringStruct(u'FileDescription', u'Space War!'),
     StringStruct(u'FileVersion', u'0.9-beta.1'),
     StringStruct(u'InternalName', u'Space War'),
     StringStruct(u'LegalCopyright', u'(c) Jon Cooper'),
