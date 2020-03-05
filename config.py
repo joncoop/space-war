@@ -54,7 +54,7 @@ explosion_imgs = [load_image('assets/images/explosion00.png'),
 explosion_imgs = [pygame.transform.scale(img, [128, 128]) for img in explosion_imgs]
 
 ''' Music '''
-start_theme = None
+start_theme = 'assets/music/The Smurfs NES - Act 1.wav'
 main_theme = 'assets/music/SilverSurferNESStageTheme1.wav'
 end_theme = None
 
@@ -63,6 +63,7 @@ laser_snd = load_sound('assets/sounds/sfx_laser1.ogg')
 explosion_snd = load_sound('assets/sounds/explosion1.ogg')
 power_up_snd = load_sound('assets/sounds/phaserUp3.ogg')
 power_down_snd = load_sound('assets/sounds/phaserDown3.ogg')
+end_snd = load_sound('assets/music/Mega Man - Game Over.wav')
 
 # Game settings
 ''' Controls '''
@@ -80,4 +81,4 @@ POWERUP_SPEED = 6
 MOB1_VALUE = 10
 MOB2_VALUE = 50
 POWERUP_VALUE = 20
-EXTRA_SHIP_AT = [2000, 5000]
+EXTRA_SHIP_AT = [2000, 5000, 10000]
