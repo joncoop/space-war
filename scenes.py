@@ -138,13 +138,22 @@ class PlayScene(Scene):
                 end_snd.play()
             elif self.ship.shield <= 0:
                 self.state = SHIP_KILLED
-                self.delay_timer = 2 * FPS
+                self.delay_timer = 3 * FPS
             elif len(self.mobs) == 0:
                 self.state = STAGE_CLEARED
                 self.accuracy = round(100 * self.shots_needed / self.shots_fired)
                 self.misses = self.shots_fired - self.shots_needed
                 self.bonus = self.accuracy
-                self.delay_timer = 3 * self.accuracy + FPS
+
+                if self.accuracy == 100:
+                    self.bonus_multiplier = 5
+                elif self.accuracy > 80:
+                    self.bonus_multiplier = 2
+                else:
+                    self.bonus_multiplier = 1
+
+                self.delay_timer = 3 * self.accuracy + 3 * FPS
+
                 pygame.mixer.music.pause()
         else:
             self.delay_timer -= 1
@@ -189,13 +198,21 @@ class PlayScene(Scene):
             draw_text(screen, 'Stage cleared!', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 80], 'center')
             text = font_sm.render("Shots fired: " + str(self.shots_fired), True, WHITE)
             x = SCREEN_WIDTH // 2 - text.get_rect().width // 2
-            draw_text(screen, 'Shots fired: ' + str(self.shots_fired), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 - 30], 'midleft')
-            draw_text(screen, 'Misses: ' + str(self.misses), font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')
-            draw_text(screen, 'Accuracy: ' + str(self.accuracy) + "%", font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 30], 'midleft')
-            draw_text(screen, 'Bonus: ' + str(self.bonus), font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 60], 'midleft')
 
-            if self.bonus > 0 and self.delay_timer % 3 == 0:
-                self.ship.score += 1
+            shot_str = 'Shots fired: ' + str(self.shots_fired)
+            miss_str = 'Misses: ' + str(self.misses)
+            accuracy_str = 'Accuracy: ' + str(self.accuracy) + "%"
+            bonus_str = 'Bonus: ' + str(self.bonus)
+            if self.bonus_multiplier > 1:
+                bonus_str += ' x' + str(self.bonus_multiplier)
+
+            draw_text(screen, shot_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2 - 30], 'midleft')
+            draw_text(screen, miss_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')
+            draw_text(screen, accuracy_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 30], 'midleft')
+            draw_text(screen, bonus_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 60], 'midleft')
+
+            if self.bonus > 0 and self.delay_timer % 3 == 0 and self.delay_timer < 3 * self.accuracy + 1.5 * FPS:
+                self.ship.score += 1 * self.bonus_multiplier
                 self.bonus -= 1
 
     def update(self):
