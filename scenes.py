@@ -29,8 +29,8 @@ class TitleScene(Scene):
 
         self.background = Background(background_img)
 
-        pygame.mixer.music.load(start_theme)
-        pygame.mixer.music.play(-1)
+        load_music(start_theme)
+        play_music()
 
         self.high_score = read_high_score()
 
@@ -72,8 +72,8 @@ class PlayScene(Scene):
         self.state = INTRO
         self.extra_life_index = 0
 
-        pygame.mixer.music.load(main_theme)
-        pygame.mixer.music.play(-1)
+        load_music(main_theme)
+        play_music()
 
         self.high_score = read_high_score()
 
@@ -116,7 +116,7 @@ class PlayScene(Scene):
         for mob in self.mobs:
             self.shots_needed += mob.shield
 
-        pygame.mixer.music.unpause()
+        unpause_music()
 
     def process_input(self, events, pressed_keys):
         for event in events:
@@ -138,7 +138,7 @@ class PlayScene(Scene):
             if self.ship.num_lives == 0:
                 self.state = GAME_OVER
                 self.delay_timer = 20 * FPS
-                pygame.mixer.music.stop()
+                stop_music()
                 end_snd.play()
 
                 if self.ship.score >= self.high_score:
@@ -162,7 +162,7 @@ class PlayScene(Scene):
                     self.bonus_multiplier = 1
 
                 self.delay_timer = 3 * self.accuracy + 3 * FPS
-                pygame.mixer.music.pause()
+                pause_music()
         else:
             self.delay_timer -= 1
 
@@ -259,7 +259,7 @@ class EndScene(Scene):
 
     def __init__(self):
         super().__init__()
-        pygame.mixer.music.stop()
+        stop_music()
 
     def process_input(self, events, pressed_keys):
         for event in events:

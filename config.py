@@ -1,14 +1,5 @@
-import os
 import pygame
-import sys
 from tools import *
-
-
-# Stuff to make exe work
-if getattr(sys, 'frozen', False):
-    application_path = sys._MEIPASS + '/'
-else:
-    application_path = os.path.dirname(__file__) + '/'
 
 
 # Window settings
@@ -33,7 +24,7 @@ pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption(TITLE)
 
-icon = load_image(application_path + 'assets/images/window_icon.png')
+icon = load_image('assets/images/window_icon.png')
 pygame.display.set_icon(icon)
 
 
@@ -44,39 +35,39 @@ WHITE = (255, 255, 255)
 PURPLE = (94, 63, 107)
 
 ''' Fonts '''
-font_sm = pygame.font.Font(application_path + 'assets/fonts/recharge bd.ttf', 24)
-font_md = pygame.font.Font(application_path + 'assets/fonts/recharge bd.ttf', 32)
-font_lg = pygame.font.Font(application_path + 'assets/fonts/recharge bd.ttf', 48)
-font_xl = pygame.font.Font(application_path + 'assets/fonts/recharge bd.ttf', 72)
+font_sm = load_font('assets/fonts/recharge bd.ttf', 24)
+font_md = load_font('assets/fonts/recharge bd.ttf', 32)
+font_lg = load_font('assets/fonts/recharge bd.ttf', 48)
+font_xl = load_font('assets/fonts/recharge bd.ttf', 72)
 
 ''' Images '''
-background_img = load_image(application_path + 'assets/images/purple.png')
-ship_img = load_image(application_path + 'assets/images/playerShip1_blue.png')
-ship_icon = load_image(application_path + 'assets/images/playerShip1_blue.png', height=32)
-mob1_img = load_image(application_path + 'assets/images/enemyBlack4.png')
-mob2_img = load_image(application_path + 'assets/images/enemyRed1.png')
-laser_img = load_image(application_path + 'assets/images/laserBlue03.png')
-bomb_img = load_image(application_path + 'assets/images/laserRed03.png')
-double_shot_img = load_image(application_path + 'assets/images/powerupYellow_bolt.png')
-explosion_imgs = [load_image(application_path + 'assets/images/explosion00.png'),
-                  load_image(application_path + 'assets/images/explosion01.png'),
-                  load_image(application_path + 'assets/images/explosion02.png'),
-                  load_image(application_path + 'assets/images/explosion03.png'),
-                  load_image(application_path + 'assets/images/explosion04.png')]
+background_img = load_image('assets/images/purple.png')
+ship_img = load_image('assets/images/playerShip1_blue.png')
+ship_icon = load_image('assets/images/playerShip1_blue.png', height=32)
+mob1_img = load_image('assets/images/enemyBlack4.png')
+mob2_img = load_image('assets/images/enemyRed1.png')
+laser_img = load_image('assets/images/laserBlue03.png')
+bomb_img = load_image('assets/images/laserRed03.png')
+double_shot_img = load_image('assets/images/powerupYellow_bolt.png')
+explosion_imgs = [load_image('assets/images/explosion00.png'),
+                  load_image('assets/images/explosion01.png'),
+                  load_image('assets/images/explosion02.png'),
+                  load_image('assets/images/explosion03.png'),
+                  load_image('assets/images/explosion04.png')]
 
 explosion_imgs = [pygame.transform.scale(img, [128, 128]) for img in explosion_imgs]
 
 ''' Music '''
-start_theme = application_path + 'assets/music/The Smurfs NES - Act 1.wav'
-main_theme = application_path + 'assets/music/SilverSurferNESStageTheme1.wav'
+start_theme = 'assets/music/The Smurfs NES - Act 1.wav'
+main_theme = 'assets/music/SilverSurferNESStageTheme1.wav'
 end_theme = None
 
 ''' Sounds '''
-laser_snd = load_sound(application_path + 'assets/sounds/laser.ogg')
-explosion_snd = load_sound(application_path + 'assets/sounds/explosion.ogg')
-power_up_snd = load_sound(application_path + 'assets/sounds/powerUp.wav')
-point_snd = load_sound(application_path + 'assets/sounds/pointTally.wav')
-end_snd = load_sound(application_path + 'assets/music/Mega Man - Game Over.wav')
+laser_snd = load_sound('assets/sounds/laser.ogg')
+explosion_snd = load_sound('assets/sounds/explosion.ogg')
+power_up_snd = load_sound('assets/sounds/powerUp.wav')
+point_snd = load_sound('assets/sounds/pointTally.wav')
+end_snd = load_sound('assets/music/Mega Man - Game Over.wav')
 
 
 # Game settings

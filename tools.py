@@ -1,8 +1,17 @@
+import getpass
 import os
 import pygame
-import getpass
+import sys
 
 
+# Stuff to make executables work
+if getattr(sys, 'frozen', False):
+    application_path = sys._MEIPASS + '/'
+else:
+    application_path = os.path.dirname(__file__) + '/'
+
+
+# Helper functions
 def draw_text(surface, text, font, color, loc, anchor='topleft'):
     text = str(text)
     text = font.render(text, True, color)
@@ -36,8 +45,8 @@ def get_text_size(text, font):
 
     return rect.width, rect.height
 
-def load_image(path, width=None, height=None):
-    image = pygame.image.load(path).convert_alpha()
+def load_image(relative_path, width=None, height=None):
+    image = pygame.image.load(application_path + relative_path).convert_alpha()
 
     if width is not None:
         if height is None:
@@ -51,11 +60,29 @@ def load_image(path, width=None, height=None):
 
     return image
 
-def load_sound(path, volume=1.0):
-    sound = pygame.mixer.Sound(path)
+def load_sound(relative_path, volume=1.0):
+    sound = pygame.mixer.Sound(application_path + relative_path)
     sound.set_volume(volume)
 
     return sound
+
+def load_font(relative_path, size):
+    return pygame.font.Font(application_path + relative_path, size)
+
+def load_music(relative_path, volume=1.0):
+    pygame.mixer.music.load(application_path + relative_path)
+
+def play_music(loops=-1):
+    pygame.mixer.music.play(loops)
+
+def pause_music():
+    pygame.mixer.music.pause()
+
+def unpause_music():
+    pygame.mixer.music.unpause()
+
+def stop_music():
+    pygame.mixer.music.stop()
 
 def read_high_score():
     username = getpass.getuser()
