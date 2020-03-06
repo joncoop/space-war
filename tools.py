@@ -1,7 +1,7 @@
-import getpass
 import os
 import pygame
 import sys
+
 
 # Stuff to make executables work
 if getattr(sys, 'frozen', False):

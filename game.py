@@ -1,5 +1,4 @@
 # Imports
-import sys
 from scenes import *
 
 

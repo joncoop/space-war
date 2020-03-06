@@ -2,6 +2,7 @@ import math
 import random
 from config import *
 
+
 # Player
 class Ship(pygame.sprite.Sprite):
 
