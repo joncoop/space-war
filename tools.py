@@ -3,10 +3,9 @@ import os
 import pygame
 import sys
 
-
 # Stuff to make executables work
 if getattr(sys, 'frozen', False):
-    application_path = sys._MEIPASS + '/'
+    application_path = sys.MEIPASS + '/'
 else:
     application_path = os.path.dirname(__file__) + '/'
 
@@ -38,12 +37,14 @@ def draw_text(surface, text, font, color, loc, anchor='topleft'):
 
     surface.blit(text, rect)
 
+
 def get_text_size(text, font):
     text = str(text)
     text = font.render(text, True, [0, 0, 0])
     rect = text.get_rect()
 
     return rect.width, rect.height
+
 
 def load_image(relative_path, width=None, height=None):
     image = pygame.image.load(application_path + relative_path).convert_alpha()
@@ -60,53 +61,33 @@ def load_image(relative_path, width=None, height=None):
 
     return image
 
+
 def load_sound(relative_path, volume=1.0):
     sound = pygame.mixer.Sound(application_path + relative_path)
     sound.set_volume(volume)
 
     return sound
 
+
 def load_font(relative_path, size):
     return pygame.font.Font(application_path + relative_path, size)
+
 
 def load_music(relative_path, volume=1.0):
     pygame.mixer.music.load(application_path + relative_path)
 
+
 def play_music(loops=-1):
     pygame.mixer.music.play(loops)
+
 
 def pause_music():
     pygame.mixer.music.pause()
 
+
 def unpause_music():
     pygame.mixer.music.unpause()
 
+
 def stop_music():
     pygame.mixer.music.stop()
-
-def read_high_score():
-    username = getpass.getuser()
-    folder_name = f'C:/Users/{username}/AppData/Local/Space War/'
-    file_name = 'scores.txt'
-    full_path = folder_name + file_name
-
-    if os.path.exists(full_path):
-        with open(full_path, 'r') as f:
-            score = int(f.read())
-    else:
-        score = 0
-
-    return int(score)
-
-def save_high_score(score):
-    print('writing...')
-    username = getpass.getuser()
-    folder_name = f'C:/Users/{username}/AppData/Local/Space War/'
-    file_name = 'scores.txt'
-    full_path = folder_name + file_name
-
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name)
-
-    with open(full_path, 'w') as f:
-        f.write(str(score))

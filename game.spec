@@ -1,7 +1,7 @@
 # -*- mode: python -*-
 
 block_cipher = None
-
+print('hello')
 
 a = Analysis(['game.py'],
              pathex=['C:\\Users\\jccooper\\Desktop\\space-war-master'],

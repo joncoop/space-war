@@ -1,4 +1,3 @@
-import pygame
 from tools import *
 
 
@@ -19,7 +18,7 @@ GAME_OVER = 5
 
 
 # Make window
-pygame.mixer.pre_init(44100, -16, 1, 512)
+pygame.mixer.pre_init(44100, -16, 1, 1024)
 pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption(TITLE)

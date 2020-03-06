@@ -1,4 +1,5 @@
 # Imports
+from save import *
 from sprites import *
 from tools import *
 
@@ -48,7 +49,8 @@ class TitleScene(Scene):
 
         draw_text(screen, TITLE, font_xl, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100], 'center')
         screen.blit(ship_img, [SCREEN_WIDTH // 2 - ship_img.get_width() // 2, SCREEN_HEIGHT // 2 - 32])
-        draw_text(screen, 'Press any key to begin.', font_sm, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100], 'center')
+        draw_text(screen, 'Press any key to begin.', font_sm, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100],
+                  'center')
 
 
 class PlayScene(Scene):
@@ -144,13 +146,13 @@ class PlayScene(Scene):
                 if self.ship.score >= self.high_score:
                     save_high_score(self.high_score)
 
-            elif self.ship.alive == False:
+            elif not self.ship.alive:
                 self.state = SHIP_KILLED
                 self.delay_timer = 3 * FPS
 
             elif len(self.mobs) == 0:
                 self.state = STAGE_CLEARED
-                self.accuracy = round(100 * self.shots_needed / self.shots_fired)
+                self.accuracy = min(100, round(100 * self.shots_needed / self.shots_fired))
                 self.misses = self.shots_fired - self.shots_needed
                 self.bonus = self.accuracy
 
@@ -179,8 +181,7 @@ class PlayScene(Scene):
                 elif self.state == GAME_OVER:
                     self.next_scene = TitleScene()
 
-        if (self.extra_life_index < len(EXTRA_SHIP_AT) and
-            self.ship.score >= EXTRA_SHIP_AT[self.extra_life_index]):
+        if self.extra_life_index < len(EXTRA_SHIP_AT) and self.ship.score >= EXTRA_SHIP_AT[self.extra_life_index]:
             self.ship.num_lives += 1
             self.extra_life_index += 1
 
@@ -192,7 +193,7 @@ class PlayScene(Scene):
         high_score_str = f'High: {self.high_score}'
         draw_text(screen, score_str, font_sm, WHITE, [10, 10], 'topleft')
         draw_text(screen, level_str, font_sm, WHITE, [10, 40], 'topleft')
-        draw_text(screen, high_score_str, font_sm, WHITE, [SCREEN_WIDTH -10, 10], 'topright')
+        draw_text(screen, high_score_str, font_sm, WHITE, [SCREEN_WIDTH - 10, 10], 'topright')
 
         extra_lives = self.ship.num_lives - 1
 
@@ -254,6 +255,7 @@ class PlayScene(Scene):
         self.items.draw(screen)
         self.explosions.draw(screen)
         self.display_stats()
+
 
 class EndScene(Scene):
 
