@@ -66,7 +66,7 @@ class PlayScene(Scene):
         self.explosions = pygame.sprite.Group()
 
         self.background = Background(background_img)
-        self.ship = Ship(ship_img, [SCREEN_WIDTH // 2, SCREEN_HEIGHT - 75], self)
+        self.ship = Ship(ship_img, [SCREEN_WIDTH // 2, SCREEN_HEIGHT - 85], self)
         self.player.add(self.ship)
 
         self.level = 1
@@ -74,13 +74,15 @@ class PlayScene(Scene):
         self.state = INTRO
         self.extra_life_index = 0
 
+        self.high_score = read_high_score()
+        self.num_lives = NUM_LIVES
+        self.score = 0
+        self.start_level()
+
         load_music(main_theme)
         play_music()
 
-        self.high_score = read_high_score()
-
-        self.start_level()
-
+    # noinspection PyAttributeOutsideInit
     def start_level(self):
         centerx = SCREEN_WIDTH // 2
         spacing = 125
@@ -110,7 +112,7 @@ class PlayScene(Scene):
 
         x = random.randrange(50, SCREEN_WIDTH - 50)
         y = random.randrange(-3000, -1000)
-        double_shot = DoubleShot(double_shot_img, [x, y])
+        double_shot = DoubleShot(double_shot_img, [x, y], self)
         self.items.add(double_shot)
 
         self.shots_fired = 0
@@ -137,13 +139,13 @@ class PlayScene(Scene):
 
     def check_status(self):
         if self.delay_timer == 0:
-            if self.ship.num_lives == 0:
+            if self.num_lives == 0:
                 self.state = GAME_OVER
                 self.delay_timer = 20 * FPS
                 stop_music()
                 end_snd.play()
 
-                if self.ship.score >= self.high_score:
+                if self.score >= self.high_score:
                     save_high_score(self.high_score)
 
             elif not self.ship.alive:
@@ -181,21 +183,21 @@ class PlayScene(Scene):
                 elif self.state == GAME_OVER:
                     self.next_scene = TitleScene()
 
-        if self.extra_life_index < len(EXTRA_SHIP_AT) and self.ship.score >= EXTRA_SHIP_AT[self.extra_life_index]:
-            self.ship.num_lives += 1
+        if self.extra_life_index < len(EXTRA_SHIP_AT) and self.score >= EXTRA_SHIP_AT[self.extra_life_index]:
+            self.num_lives += 1
             self.extra_life_index += 1
 
-        self.high_score = max(self.high_score, self.ship.score)
+        self.high_score = max(self.high_score, self.score)
 
     def display_stats(self):
-        score_str = f'Score: {self.ship.score}'
+        score_str = f'Score: {self.score}'
         level_str = f'Level: {self.level}'
         high_score_str = f'High: {self.high_score}'
         draw_text(screen, score_str, font_sm, WHITE, [10, 10], 'topleft')
         draw_text(screen, level_str, font_sm, WHITE, [10, 40], 'topleft')
         draw_text(screen, high_score_str, font_sm, WHITE, [SCREEN_WIDTH - 10, 10], 'topright')
 
-        extra_lives = self.ship.num_lives - 1
+        extra_lives = self.num_lives - 1
 
         if self.state == SHIP_KILLED:
             extra_lives += 1
@@ -227,7 +229,7 @@ class PlayScene(Scene):
             draw_text(screen, bonus_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2 + 60], 'midleft')
 
             if self.bonus > 0 and self.delay_timer % 3 == 0 and self.delay_timer < 3 * self.accuracy + 1.5 * FPS:
-                self.ship.score += 1 * self.bonus_multiplier
+                self.score += 1 * self.bonus_multiplier
                 self.bonus -= 1
                 if self.delay_timer % 2 == 0:
                     point_snd.play()

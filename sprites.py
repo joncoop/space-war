@@ -16,10 +16,9 @@ class Ship(pygame.sprite.Sprite):
         self.spawn_loc = location
         self.scene = scene
 
+        self.alive = True
         self.shield = 1
-        self.num_lives = NUM_LIVES
         self.shoots_double = False
-        self.score = 0
 
     def move_left(self):
         self.rect.x -= SHIP_SPEED
@@ -71,7 +70,7 @@ class Ship(pygame.sprite.Sprite):
 
     def die(self):
         self.alive = False
-        self.num_lives -= 1
+        self.scene.num_lives -= 1
         self.kill()
 
         explosion = Explosion(explosion_imgs, self.rect.center)
@@ -182,7 +181,7 @@ class Mob(pygame.sprite.Sprite):
     def die(self):
         explosion = Explosion(explosion_imgs, self.rect.center)
         self.scene.explosions.add(explosion)
-        self.scene.ship.score += self.value
+        self.scene.score += self.value
         self.kill()
 
     def update(self):
@@ -290,17 +289,18 @@ class Bomb(pygame.sprite.Sprite):
 # Power-ups
 class DoubleShot(pygame.sprite.Sprite):
 
-    def __init__(self, image, location):
+    def __init__(self, image, location, scene):
         super().__init__()
 
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.center = location
+        self.scene = scene
         self.value = POWERUP_VALUE
 
     def apply(self, ship):
         ship.shoots_double = True
-        ship.score += self.value
+        self.scene.score += self.value
         power_up_snd.play()
 
     def update(self):
