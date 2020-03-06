@@ -51,7 +51,6 @@ font_xl = pygame.font.Font(application_path + 'assets/fonts/recharge bd.ttf', 72
 
 ''' Images '''
 background_img = load_image(application_path + 'assets/images/purple.png')
-
 ship_img = load_image(application_path + 'assets/images/playerShip1_blue.png')
 ship_icon = load_image(application_path + 'assets/images/playerShip1_blue.png', height=32)
 mob1_img = load_image(application_path + 'assets/images/enemyBlack4.png')
@@ -73,10 +72,9 @@ main_theme = application_path + 'assets/music/SilverSurferNESStageTheme1.wav'
 end_theme = None
 
 ''' Sounds '''
-laser_snd = load_sound(application_path + 'assets/sounds/sfx_laser1.ogg')
-explosion_snd = load_sound(application_path + 'assets/sounds/explosion1.ogg')
-power_up_snd = load_sound(application_path + 'assets/sounds/phaserUp3.ogg')
-power_down_snd = load_sound(application_path + 'assets/sounds/phaserDown3.ogg')
+laser_snd = load_sound(application_path + 'assets/sounds/laser.ogg')
+explosion_snd = load_sound(application_path + 'assets/sounds/explosion.ogg')
+power_up_snd = load_sound(application_path + 'assets/sounds/powerUp.wav')
 point_snd = load_sound(application_path + 'assets/sounds/pointTally.wav')
 end_snd = load_sound(application_path + 'assets/music/Mega Man - Game Over.wav')
 
@@ -90,6 +88,7 @@ CONTROLS = {'left': pygame.K_LEFT,
 
 NUM_LIVES = 3
 SHIP_SPEED = 5
+FLEET_SPEED = 1
 MOB_ATTACK_SPEED = 5
 LASER_SPEED = 8
 BOMB_SPEED = 6

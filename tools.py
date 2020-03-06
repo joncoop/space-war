@@ -29,6 +29,13 @@ def draw_text(surface, text, font, color, loc, anchor='topleft'):
 
     surface.blit(text, rect)
 
+def get_text_size(text, font):
+    text = str(text)
+    text = font.render(text, True, [0, 0, 0])
+    rect = text.get_rect()
+
+    return rect.width, rect.height
+
 def load_image(path, width=None, height=None):
     image = pygame.image.load(path).convert_alpha()
 
@@ -52,7 +59,7 @@ def load_sound(path, volume=1.0):
 
 def read_high_score():
     username = getpass.getuser()
-    folder_name = 'C:/Users/' + username + '/AppData/Local/Space War/'
+    folder_name = f'C:/Users/{username}/AppData/Local/Space War/'
     file_name = 'scores.txt'
     full_path = folder_name + file_name
 
@@ -67,7 +74,7 @@ def read_high_score():
 def save_high_score(score):
     print('writing...')
     username = getpass.getuser()
-    folder_name = 'C:/Users/' + username + '/AppData/Local/Space War/'
+    folder_name = f'C:/Users/{username}/AppData/Local/Space War/'
     file_name = 'scores.txt'
     full_path = folder_name + file_name
 
@@ -76,4 +83,3 @@ def save_high_score(score):
 
     with open(full_path, 'w') as f:
         f.write(str(score))
-        print('done')

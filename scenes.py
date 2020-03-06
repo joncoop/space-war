@@ -144,9 +144,10 @@ class PlayScene(Scene):
                 if self.ship.score >= self.high_score:
                     save_high_score(self.high_score)
 
-            elif self.ship.shield <= 0:
+            elif self.ship.alive == False:
                 self.state = SHIP_KILLED
                 self.delay_timer = 3 * FPS
+
             elif len(self.mobs) == 0:
                 self.state = STAGE_CLEARED
                 self.accuracy = round(100 * self.shots_needed / self.shots_fired)
@@ -161,7 +162,6 @@ class PlayScene(Scene):
                     self.bonus_multiplier = 1
 
                 self.delay_timer = 3 * self.accuracy + 3 * FPS
-
                 pygame.mixer.music.pause()
         else:
             self.delay_timer -= 1
@@ -187,9 +187,9 @@ class PlayScene(Scene):
         self.high_score = max(self.high_score, self.ship.score)
 
     def display_stats(self):
-        score_str = 'Score: ' + str(self.ship.score)
-        level_str = 'Level: ' + str(self.level)
-        high_score_str = 'High: ' + str(self.high_score)
+        score_str = f'Score: {self.ship.score}'
+        level_str = f'Level: {self.level}'
+        high_score_str = f'High: {self.high_score}'
         draw_text(screen, score_str, font_sm, WHITE, [10, 10], 'topleft')
         draw_text(screen, level_str, font_sm, WHITE, [10, 40], 'topleft')
         draw_text(screen, high_score_str, font_sm, WHITE, [SCREEN_WIDTH -10, 10], 'topright')
@@ -205,20 +205,20 @@ class PlayScene(Scene):
             screen.blit(ship_icon, [x, y])
 
         if self.state == INTRO:
-            draw_text(screen, 'Get Ready!', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
+            draw_text(screen, 'Get ready!', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
         elif self.state == GAME_OVER:
-            draw_text(screen, 'Game Over', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
+            draw_text(screen, 'Game over', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2], 'center')
         elif self.state == STAGE_CLEARED:
             draw_text(screen, 'Stage cleared!', font_lg, WHITE, [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 80], 'center')
-            text = font_sm.render("Shots fired: " + str(self.shots_fired), True, WHITE)
-            x = SCREEN_WIDTH // 2 - text.get_rect().width // 2
+            w, _ = get_text_size(f'Shots fired: {self.shots_fired}', font_sm)
+            x = SCREEN_WIDTH // 2 - w // 2
 
-            shot_str = 'Shots fired: ' + str(self.shots_fired)
-            miss_str = 'Misses: ' + str(self.misses)
-            accuracy_str = 'Accuracy: ' + str(self.accuracy) + "%"
-            bonus_str = 'Bonus: ' + str(self.bonus)
+            shot_str = f'Shots fired: {self.shots_fired}'
+            miss_str = f'Misses: {self.misses}'
+            accuracy_str = f'Accuracy: {self.accuracy}%'
+            bonus_str = f'Bonus: {self.bonus}'
             if self.bonus_multiplier > 1:
-                bonus_str += ' x' + str(self.bonus_multiplier)
+                bonus_str += f' \u00D7{self.bonus_multiplier}'
 
             draw_text(screen, shot_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2 - 30], 'midleft')
             draw_text(screen, miss_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')
