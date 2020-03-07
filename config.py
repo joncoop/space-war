@@ -66,7 +66,6 @@ point_snd = load_sound('assets/sounds/pointTally.wav')
 end_snd = load_sound('assets/music/Mega Man - Game Over.wav')
 
 # Controls
-''' Controls '''
 CONTROLS = {'left': pygame.K_LEFT,
             'right': pygame.K_RIGHT,
             'shoot': pygame.K_SPACE,
