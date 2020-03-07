@@ -1,7 +1,7 @@
 import os
-import pygame
 import sys
 
+import pygame
 
 # Stuff to make executables work
 if getattr(sys, 'frozen', False):

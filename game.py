@@ -1,4 +1,3 @@
-# Imports
 from scenes import *
 
 
@@ -15,7 +14,7 @@ class Game:
 
         return x_out or (ctrl and q)
 
-    def run(self ):
+    def run(self):
         while self.active_scene is not None:
             # Get user input
             pressed_keys = pygame.key.get_pressed()

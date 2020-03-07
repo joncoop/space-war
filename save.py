@@ -1,7 +1,5 @@
-# import getpass
 import os
 import platform
-
 
 platform = platform.system()
 
@@ -9,8 +7,6 @@ if platform == 'Linux':
     folder_name = os.path.expanduser('~/.spacewar/')
     file_name = 'scores.txt'
 elif platform == 'Windows':
-    # username = getpass.getuser()
-    # folder_name = f'C:/Users/{username}/AppData/Local/Space War/'
     folder_name = os.path.expanduser('~/AppData/Local/Space War/')
     file_name = 'scores.txt'
 

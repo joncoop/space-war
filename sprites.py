@@ -1,5 +1,6 @@
 import math
 import random
+
 from config import *
 
 
@@ -71,6 +72,7 @@ class Ship(pygame.sprite.Sprite):
     def die(self):
         self.alive = False
         self.scene.num_lives -= 1
+        self.shoots_double = False
         self.kill()
 
         explosion = Explosion(explosion_imgs, self.rect.center)
@@ -120,9 +122,9 @@ class Mob(pygame.sprite.Sprite):
         if dy == 0:
             angle = 0
         else:
-            angle = round(math.degrees(math.atan(dx / dy)))
+            angle = math.degrees(math.atan(dx / dy))
 
-        return angle
+        return round(angle)
 
     def rotate(self, angle):
         if angle != self.angle:
@@ -143,17 +145,15 @@ class Mob(pygame.sprite.Sprite):
             self.rect.center = center
 
     def attack(self):
-        dx = (self.attack_location[0] - self.rect.centerx)
-        dy = (self.attack_location[1] - self.rect.centery)
+        dx = self.attack_location[0] - self.rect.centerx
+        dy = self.attack_location[1] - self.rect.centery
 
         if dx < MOB_ATTACK_SPEED and dy < MOB_ATTACK_SPEED:
             self.rect.center = [self.fleet_loc[0], self.fleet_loc[1]]
             self.attack_location = None
         else:
-            vx = MOB_ATTACK_SPEED * dx / math.sqrt(dx ** 2 + dy ** 2)
-            vy = MOB_ATTACK_SPEED * dy / math.sqrt(dx ** 2 + dy ** 2)
-            self.rect.x += vx
-            self.rect.y += vy
+            self.rect.x += MOB_ATTACK_SPEED * dx / math.sqrt(dx ** 2 + dy ** 2)
+            self.rect.y += MOB_ATTACK_SPEED * dy / math.sqrt(dx ** 2 + dy ** 2)
 
         if self.rect.top > SCREEN_HEIGHT:
             self.rect.centery = -200

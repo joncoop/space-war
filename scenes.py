@@ -1,10 +1,9 @@
-# Imports
 from save import *
 from sprites import *
 from tools import *
 
 
-# Scenes
+# Base scene
 class Scene:
 
     def __init__(self):
@@ -23,6 +22,7 @@ class Scene:
         self.next_scene = None
 
 
+# Game scenes
 class TitleScene(Scene):
 
     def __init__(self):
@@ -137,6 +137,7 @@ class PlayScene(Scene):
             elif pressed_keys[CONTROLS['right']]:
                 self.ship.move_right()
 
+    # noinspection PyAttributeOutsideInit
     def check_status(self):
         if self.delay_timer == 0:
             if self.num_lives == 0:

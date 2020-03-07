@@ -7,7 +7,6 @@ SCREEN_HEIGHT = 680
 TITLE = "Space War!"
 FPS = 60
 
-
 # Game states
 INTRO = 0
 PLAYING = 1
@@ -15,7 +14,6 @@ PAUSED = 2
 STAGE_CLEARED = 3
 SHIP_KILLED = 4
 GAME_OVER = 5
-
 
 # Make window
 pygame.mixer.pre_init(44100, -16, 1, 1024)
@@ -25,7 +23,6 @@ pygame.display.set_caption(TITLE)
 
 icon = load_image('assets/images/window_icon.png')
 pygame.display.set_icon(icon)
-
 
 # Load assets
 ''' Colors '''
@@ -67,7 +64,6 @@ explosion_snd = load_sound('assets/sounds/explosion.ogg')
 power_up_snd = load_sound('assets/sounds/powerUp.wav')
 point_snd = load_sound('assets/sounds/pointTally.wav')
 end_snd = load_sound('assets/music/Mega Man - Game Over.wav')
-
 
 # Game settings
 ''' Controls '''
