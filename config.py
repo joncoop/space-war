@@ -54,8 +54,8 @@ explosion_imgs = [load_image('assets/images/explosion00.png'),
 explosion_imgs = [pygame.transform.scale(img, [128, 128]) for img in explosion_imgs]
 
 ''' Music '''
-start_theme = 'assets/music/The Smurfs NES - Act 1.wav'
-main_theme = 'assets/music/SilverSurferNESStageTheme1.wav'
+start_theme = 'assets/music/TheSmurfs-NES-Act1.wav'
+main_theme = 'assets/music/SilverSurfer-NES-StageTheme1.wav'
 end_theme = None
 
 ''' Sounds '''
@@ -63,7 +63,7 @@ laser_snd = load_sound('assets/sounds/laser.ogg')
 explosion_snd = load_sound('assets/sounds/explosion.ogg')
 power_up_snd = load_sound('assets/sounds/powerUp.wav')
 point_snd = load_sound('assets/sounds/pointTally.wav')
-end_snd = load_sound('assets/music/Mega Man - Game Over.wav')
+end_snd = load_sound('assets/music/MegaMan-GameOver.wav')
 
 # Controls
 CONTROLS = {'left': pygame.K_LEFT,
