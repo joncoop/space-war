@@ -65,13 +65,14 @@ power_up_snd = load_sound('assets/sounds/powerUp.wav')
 point_snd = load_sound('assets/sounds/pointTally.wav')
 end_snd = load_sound('assets/music/Mega Man - Game Over.wav')
 
-# Game settings
+# Controls
 ''' Controls '''
 CONTROLS = {'left': pygame.K_LEFT,
             'right': pygame.K_RIGHT,
             'shoot': pygame.K_SPACE,
             'restart': pygame.K_r}
 
+# Game settings
 NUM_LIVES = 3
 SHIP_SPEED = 5
 FLEET_SPEED = 1
