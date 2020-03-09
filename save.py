@@ -7,7 +7,7 @@ if platform == 'Linux':
     folder_name = os.path.expanduser('~/.spacewar/')
     file_name = 'scores.txt'
 elif platform == 'Windows':
-    folder_name = os.path.expanduser('~/AppData/Local/Space War/')
+    folder_name = os.path.expanduser('~\\AppData\\Local\\Space War\\')
     file_name = 'scores.txt'
 
 

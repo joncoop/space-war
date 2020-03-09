@@ -111,7 +111,7 @@ class PlayScene(Scene):
             self.mobs.add(Mob(mob2_img, loc, 1, self))
 
         x = random.randrange(50, SCREEN_WIDTH - 50)
-        y = random.randrange(-3000, -1000)
+        y = random.randrange(-5000, -1000)
         double_shot = DoubleShot(double_shot_img, [x, y], self)
         self.items.add(double_shot)
 
@@ -222,7 +222,7 @@ class PlayScene(Scene):
             accuracy_str = f'Accuracy: {self.accuracy}%'
             bonus_str = f'Bonus: {self.bonus}'
             if self.bonus_multiplier > 1:
-                bonus_str += f' \u00D7{self.bonus_multiplier}'
+                bonus_str += f'\u00D7{self.bonus_multiplier}'
 
             draw_text(screen, shot_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2 - 30], 'midleft')
             draw_text(screen, miss_str, font_sm, WHITE, [x, SCREEN_HEIGHT // 2], 'midleft')

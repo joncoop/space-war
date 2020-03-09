@@ -1,11 +1,11 @@
 import os
+import pygame
 import sys
 
-import pygame
 
 # Stuff to make executables work
 if getattr(sys, 'frozen', False):
-    application_path = sys.MEIPASS + '/'
+    application_path = sys._MEIPASS + '/'
 else:
     application_path = os.path.dirname(__file__) + '/'
 
