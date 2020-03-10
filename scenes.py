@@ -122,21 +122,6 @@ class PlayScene(Scene):
 
         unpause_music()
 
-    def process_input(self, events, pressed_keys):
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == CONTROLS['shoot']:
-                    if self.state == PLAYING:
-                        self.shots_fired += self.ship.shoot()
-                if event.key == CONTROLS['restart']:
-                    self.next_scene = TitleScene()
-
-        if self.state == PLAYING or self.state == STAGE_CLEARED:
-            if pressed_keys[CONTROLS['left']]:
-                self.ship.move_left()
-            elif pressed_keys[CONTROLS['right']]:
-                self.ship.move_right()
-
     # noinspection PyAttributeOutsideInit
     def check_status(self):
         if self.delay_timer == 0:
@@ -235,6 +220,23 @@ class PlayScene(Scene):
                 if self.delay_timer % 2 == 0:
                     point_snd.play()
 
+    def process_input(self, events, pressed_keys):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == CONTROLS['shoot']:
+                    if self.state == PLAYING:
+                        self.shots_fired += self.ship.shoot()
+                if event.key == CONTROLS['restart']:
+                    self.next_scene = TitleScene()
+                elif event.key == pygame.K_i:
+                    self.ship.invincible = not self.ship.invincible
+
+        if self.state == PLAYING or self.state == STAGE_CLEARED:
+            if pressed_keys[CONTROLS['left']]:
+                self.ship.move_left()
+            elif pressed_keys[CONTROLS['right']]:
+                self.ship.move_right()
+
     def update(self):
         self.background.update()
         self.mobs.update()
@@ -258,7 +260,7 @@ class PlayScene(Scene):
         self.items.draw(screen)
         self.explosions.draw(screen)
         self.display_stats()
-
+        
 
 class EndScene(Scene):
 

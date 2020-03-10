@@ -20,6 +20,7 @@ class Ship(pygame.sprite.Sprite):
         self.alive = True
         self.shield = 1
         self.shoots_double = False
+        self.invincible = False # for testing
 
     def move_left(self):
         self.rect.x -= SHIP_SPEED
@@ -85,8 +86,10 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         self.check_items()
-        self.check_bombs()
-        self.check_mobs()
+
+        if not self.invincible:
+            self.check_bombs()
+            self.check_mobs()
 
 
 # Enemies
@@ -116,13 +119,16 @@ class Mob(pygame.sprite.Sprite):
         self.scene.bombs.add(bomb)
 
     def get_angle_to_loc(self, loc):
-        dx = (loc[0] - self.rect.centerx)
-        dy = (loc[1] - self.rect.centery)
+        dx = loc[0] - self.rect.centerx
+        dy = loc[1] - self.rect.centery
 
         if dy == 0:
             angle = 0
         else:
             angle = math.degrees(math.atan(dx / dy))
+
+        if dy < 0:
+            angle += 180
 
         return round(angle)
 
@@ -130,10 +136,15 @@ class Mob(pygame.sprite.Sprite):
         if angle != self.angle:
             center = self.rect.center
 
-            if abs(self.angle - angle) > 5:
+            if abs(self.angle - angle) > 15:
+                rotate_amount = 10
+            elif abs(self.angle - angle) > 5:
                 rotate_amount = 3
             else:
                 rotate_amount = 1
+
+            #if (self.angle - angle) > 180:
+            #    rotate_amount *= -1
 
             if self.angle < angle:
                 self.angle += rotate_amount
@@ -178,7 +189,7 @@ class Mob(pygame.sprite.Sprite):
             self.die()
 
     def set_attack_path(self):
-        r = random.randrange(0, 5)
+        r = random.randrange(0, 6)
 
         if r < 2:
             ''' normal '''
@@ -199,8 +210,18 @@ class Mob(pygame.sprite.Sprite):
         elif r < 5:
             ''' out and back '''
             x = random.randrange(self.rect.centerx - 50, self.rect.centerx + 50)
-            y = SCREEN_HEIGHT - 200
+            y = SCREEN_HEIGHT - 150
             self.attack_locations = [[x, y], self.fleet_loc]
+        elif r < 6:
+            ''' loop '''
+            x1, y1 = self.rect.centerx, SCREEN_HEIGHT - 350
+            x2, y2 = self.rect.centerx - 200, SCREEN_HEIGHT - 175
+            x3, y3 = self.rect.centerx, SCREEN_HEIGHT
+            x4, y4 = self.rect.centerx + 200, SCREEN_HEIGHT - 175
+            xN, yN = self.rect.centerx, SCREEN_HEIGHT + 100
+
+            self.attack_locations = [[x1, y1], [x2, y2], [x3, y3], [x4, y4],
+                                     [x1, y1], [x2, y2], [xN, yN], self.fleet_loc]
 
     def die(self):
         explosion = Explosion(explosion_imgs, self.rect.center)
