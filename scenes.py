@@ -146,6 +146,8 @@ class PlayScene(Scene):
 
                 if self.accuracy == 100:
                     self.bonus_multiplier = 5
+                elif self.accuracy > 90:
+                    self.bonus_multiplier = 3
                 elif self.accuracy > 80:
                     self.bonus_multiplier = 2
                 else:
@@ -253,14 +255,14 @@ class PlayScene(Scene):
     def render(self):
         screen.fill(BLACK)
         self.background.draw(screen)
-        self.player.draw(screen)
         self.lasers.draw(screen)
-        self.mobs.draw(screen)
         self.bombs.draw(screen)
         self.items.draw(screen)
+        self.player.draw(screen)
+        self.mobs.draw(screen)
         self.explosions.draw(screen)
         self.display_stats()
-        
+
 
 class EndScene(Scene):
 

@@ -107,6 +107,7 @@ class Mob(pygame.sprite.Sprite):
         self.shield = shield
         self.scene = scene
         self.attack_locations = None
+        self.attack_index = 0
         self.angle = 0
 
         if self.shield == 1:
@@ -127,57 +128,55 @@ class Mob(pygame.sprite.Sprite):
         else:
             angle = math.degrees(math.atan(dx / dy))
 
-        if dy < 0:
-            angle += 180
-
         return round(angle)
 
-    def rotate(self, angle):
-        if angle != self.angle:
+    def rotate_to(self, angle):
+        if self.angle != angle:
             center = self.rect.center
 
-            if abs(self.angle - angle) > 15:
+            if abs(self.angle - angle) > 25:
                 rotate_amount = 10
-            elif abs(self.angle - angle) > 5:
+            elif abs(self.angle - angle) > 10:
                 rotate_amount = 3
             else:
                 rotate_amount = 1
 
-            #if (self.angle - angle) > 180:
-            #    rotate_amount *= -1
+            if self.angle - angle < 0:
+                rotate_amount *= -1
 
-            if self.angle < angle:
-                self.angle += rotate_amount
-            elif self.angle > angle:
-                self.angle -= rotate_amount
+            self.angle -= rotate_amount
+
+            if self.angle == -360:
+                self.angle = 0
 
             self.image = pygame.transform.rotate(self.image_copy, self.angle)
             self.mask = pygame.mask.from_surface(self.image)
             self.rect.center = center
+            print(self.angle)
 
     def attack(self):
         x = (self.rect.centerx + self.fleet_loc[0]) // 2
         y = (self.rect.centery + self.fleet_loc[1]) // 2
         self.attack_locations[-1] = [x, y]
 
-        next_location = self.attack_locations[0]
+        next_location = self.attack_locations[self.attack_index]
 
         dx = next_location[0] - self.rect.centerx
         dy = next_location[1] - self.rect.centery
 
         if abs(dx) < MOB_ATTACK_SPEED and abs(dy) < MOB_ATTACK_SPEED:
             self.rect.center = next_location
-            del self.attack_locations[0]
+            self.attack_index += 1
 
-            if len(self.attack_locations) == 0:
+            if self.attack_index == len(self.attack_locations):
                 self.attack_locations = None
         else:
             self.rect.x += MOB_ATTACK_SPEED * dx / math.sqrt(dx ** 2 + dy ** 2)
             self.rect.y += MOB_ATTACK_SPEED * dy / math.sqrt(dx ** 2 + dy ** 2)
 
         if self.rect.top > SCREEN_HEIGHT:
-            self.rect.y = -250
-            del self.attack_locations[0]
+            self.rect.y = -450
+            self.attack_index += 1
 
     def check_lasers(self):
         hit_list = pygame.sprite.spritecollide(self, self.scene.lasers, True, pygame.sprite.collide_mask)
@@ -189,6 +188,7 @@ class Mob(pygame.sprite.Sprite):
             self.die()
 
     def set_attack_path(self):
+        self.attack_index = 0
         r = random.randrange(0, 6)
 
         if r < 2:
@@ -231,11 +231,11 @@ class Mob(pygame.sprite.Sprite):
 
     def update(self):
         if self.attack_locations is not None:
-            angle = self.get_angle_to_loc(self.attack_locations[0])
+            angle = self.get_angle_to_loc(self.attack_locations[self.attack_index])
         else:
-            angle = self.get_angle_to_loc(self.rect.center)
+            angle = 0
 
-        self.rotate(angle)
+        self.rotate_to(angle)
         self.check_lasers()
 
 
