@@ -15,11 +15,17 @@ STAGE_CLEARED = 3
 SHIP_KILLED = 4
 GAME_OVER = 5
 
-# Make window
+# Initialize pygame
 pygame.mixer.pre_init(44100, -16, 1, 1024)
 pygame.init()
-screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
+pygame.joystick.init()
+
+# Make window
+screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT], pygame.FULLSCREEN)
 pygame.display.set_caption(TITLE)
+
+# Hide pointer
+pygame.mouse.set_visible(False)
 
 icon = load_image('assets/images/window_icon.png')
 pygame.display.set_icon(icon)
@@ -66,10 +72,18 @@ point_snd = load_sound('assets/sounds/pointTally.wav')
 end_snd = load_sound('assets/music/MegaMan-GameOver.wav')
 
 # Controls
+joystick_count = pygame.joystick.get_count()
+
 CONTROLS = {'left': pygame.K_LEFT,
             'right': pygame.K_RIGHT,
             'shoot': pygame.K_SPACE,
             'restart': pygame.K_r}
+
+if joystick_count > 0:
+    gamepad = pygame.joystick.Joystick(0)
+    gamepad.init()
+else:
+    gamepad = None
 
 # Game settings
 NUM_LIVES = 3

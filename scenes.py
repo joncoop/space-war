@@ -1,3 +1,4 @@
+from config import *
 from save import *
 from sprites import *
 from tools import *
@@ -39,6 +40,9 @@ class TitleScene(Scene):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 self.next_scene = PlayScene()
+            if event.type == pygame.JOYBUTTONDOWN:
+                if gamepad.get_button(9):
+                    self.next_scene = PlayScene()
 
     def update(self):
         self.background.update()
@@ -146,9 +150,9 @@ class PlayScene(Scene):
 
                 if self.accuracy == 100:
                     self.bonus_multiplier = 5
-                elif self.accuracy > 90:
+                elif self.accuracy >= 90:
                     self.bonus_multiplier = 3
-                elif self.accuracy > 80:
+                elif self.accuracy >= 80:
                     self.bonus_multiplier = 2
                 else:
                     self.bonus_multiplier = 1
@@ -233,11 +237,24 @@ class PlayScene(Scene):
                 elif event.key == pygame.K_i:
                     self.ship.invincible = not self.ship.invincible
 
+            if event.type == pygame.JOYBUTTONDOWN:
+                if gamepad.get_button(1):
+                    if self.state == PLAYING:
+                        self.shots_fired += self.ship.shoot()
+                elif gamepad.get_button(8):
+                    self.next_scene = TitleScene()
+
         if self.state == PLAYING or self.state == STAGE_CLEARED:
             if pressed_keys[CONTROLS['left']]:
                 self.ship.move_left()
             elif pressed_keys[CONTROLS['right']]:
                 self.ship.move_right()
+
+            if gamepad is not None:
+                if gamepad.get_axis(0) < 0:
+                    self.ship.move_left()
+                elif gamepad.get_axis(0) > 0:
+                    self.ship.move_right()
 
     def update(self):
         self.background.update()
